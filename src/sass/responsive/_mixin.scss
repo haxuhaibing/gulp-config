@@ -1,0 +1,14 @@
+@charset "UTF-8";
+/*sass变量*/
+$mainColor: #6e2f4c;
+/* 超小屏幕（手机，小于 768px） */
+$screen-xs-min: 0;
+$screen-xs-max: 767px;
+/* 小屏幕（平板，大于等于 768px） */
+$screen-sm-min: 768px;
+$screen-sm-max: 991px;
+/* 中等屏幕（桌面显示器，大于等于 992px） */
+$screen-md-min: 992px;
+$screen-md-max: 1199px;
+/* 大屏幕（大桌面显示器，大于等于 1200px） */
+$screen-lg-min: 1200px;
