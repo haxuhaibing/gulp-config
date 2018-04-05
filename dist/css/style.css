@@ -1,4 +1,18 @@
 @charset "UTF-8";
+.icon-d {
+  background: url("../images/../images/sprite.png") no-repeat -95px 0px;
+  background-size: 153px 78px;
+  width: 58px;
+  height: 62px;
+}
+
+.icon-service01 {
+  background: url("../images/../images/sprite.png") no-repeat 0px 0px;
+  background-size: 153px 78px;
+  width: 87px;
+  height: 78px;
+}
+
 /*sass变量*/
 /* 超小屏幕（手机，小于 768px） */
 /* 小屏幕（平板，大于等于 768px） */

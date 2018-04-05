@@ -4,16 +4,17 @@
     display: none;
 
   }
-  li{
+  .icon{
     display: inline-block;
-    background: red;
   }
 </style>
-<div class="slide">
+  <li class="icon icon-d">55</li>
+<!-- <div class="slide">
   <ul id="hd">
     <li>tab1</li>
     <li>tab2</li>
     <li>tab3</li>
+    <li class="icon icon-d">55</li>
   </ul>
 
   <div class="bd">
@@ -27,21 +28,21 @@
       3
     </div>
   </div>
-</div>
+</div> -->
 <script>
 
-var getHd=document.getElementById('hd');
-var lis=getHd.childNodes;
-console.log(lis.length);
-
-document.onclick=function(){
-  for(i=0;i<lis.length;i++){
-    if(lis[i].nodeType==1){
-          lis[i].style.width='150px';
-    }
-
-  }
-}
+// var getHd=document.getElementById('hd');
+// var lis=getHd.childNodes;
+// console.log(lis.length);
+//
+// document.onclick=function(){
+//   for(i=0;i<lis.length;i++){
+//     if(lis[i].nodeType==1){
+//           lis[i].style.width='150px';
+//     }
+//
+//   }
+// }
   // var hd = null;
   // var ali = null;
   // var oDiv = null;

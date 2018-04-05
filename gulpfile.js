@@ -61,17 +61,42 @@ var Dist = {
   fontPath: 'dist/fonts/',
 };
 // clean任务：
-gulp.task('clean',function(cb){
+gulp.task('clean', function(cb) {
   return del(['./dist']);
 })
 
 
-gulp.task('sprite', function () {
-  var spriteData = gulp.src('images/icon/*.png').pipe(spritesmith({
-    imgName: 'sprite.png',
-    cssName: 'sprite.css'
+gulp.task('sprite', function() {
+  var spriteData = gulp.src(Src.icon).pipe(spritesmith({
+    imgName: '/src/images/sprite.png',
+    cssName: '/src/sass/_icon.scss',
+    padding: 8,
+    cssTemplate: (data) => {
+      // data为对象，保存合成前小图和合成打大图的信息包括小图在大图之中的信息
+      let arr = [],
+        width = data.spritesheet.px.width,
+        height = data.spritesheet.px.height,
+        url = '../images/'+data.spritesheet.image
+      // console.log(data)
+      data.sprites.forEach(function(sprite) {
+        arr.push(
+          ".icon-" + sprite.name +
+          "{" +
+          "background: url('" + url + "') " +
+          "no-repeat " +
+          sprite.px.offset_x + " " + sprite.px.offset_y + ";" +
+          "background-size: " + width + " " + height + ";" +
+          "width: " + sprite.px.width + ";" +
+          "height: " + sprite.px.height + ";" +
+          "}\n"
+        )
+      })
+      // return "@fs:108rem;\n"+arr.join("")
+      return arr.join("")
+    }
+
   }));
-  return spriteData.pipe(gulp.dest('src/images'));
+  return spriteData.pipe(gulp.dest("dist/images"));
 });
 //样式任务
 gulp.task('sass', function() {
@@ -131,7 +156,7 @@ gulp.task('browser-sync', function() {
 
 });
 // 默认任务
-gulp.task('default', [ 'fontcopy', 'csscopy', 'jscopy', 'sprite','images', 'concat', 'sass', 'browser-sync']);
+gulp.task('default', ['fontcopy', 'csscopy', 'jscopy', 'sprite', 'images', 'concat', 'sass', 'browser-sync']);
 
 //concat拼接
 gulp.task('concat', function() {
@@ -150,7 +175,7 @@ gulp.watch(Src.html, function() {
 });
 
 gulp.watch(Src.sass, function() {
-  gulp.run('sass');
+  gulp.run('sass',);
 });
 gulp.watch(Src.css, function() {
   gulp.run('csscopy');
@@ -161,6 +186,6 @@ gulp.watch(Src.js, function() {
 });
 
 gulp.watch(Src.img, function() {
-  gulp.run('images');
+  gulp.run('images','sprite');
 });
 gulp.watch([Dist.js, Dist.html, Dist.css]).on('change', reload);
