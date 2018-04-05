@@ -16,8 +16,6 @@ var processors = [require('cssgrace')];
 var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
 var gulpif = require('gulp-if');
-var sprity = require('sprity');
-var sprity = require('sprity');
 var pixrem = require('gulp-pixrem');
 // var imagemin = require('gulp-imagemin');
 var del = require('del');
@@ -31,14 +29,12 @@ var notify = require("gulp-notify");
 var jshint = require('gulp-jshint');
 //服务器相关
 var proxy = 'localhost';
+var spritesmith = require('gulp.spritesmith');
 //通用自定义变量
 var timestamp = +new Date();
 var DEST = './';
 
-// clean任务：
-gulp.task('clean', function(cb) {
-  del(['./dist'], cb)
-})
+
 
 //源文件
 var Src = {
@@ -64,8 +60,21 @@ var Dist = {
   imgPath: 'dist/images/',
   fontPath: 'dist/fonts/',
 };
+// clean任务：
+gulp.task('clean',function(cb){
+  return del(['./dist']);
+})
+
+
+gulp.task('sprite', function () {
+  var spriteData = gulp.src('images/icon/*.png').pipe(spritesmith({
+    imgName: 'sprite.png',
+    cssName: 'sprite.css'
+  }));
+  return spriteData.pipe(gulp.dest('src/images'));
+});
 //样式任务
-gulp.task('sass', ['clean'], function() {
+gulp.task('sass', function() {
   return gulp.src(Src.sass)
     .pipe(changed(Src.sass))
     .pipe(sourcemap.init())
@@ -86,46 +95,28 @@ gulp.task('sass', ['clean'], function() {
     .pipe(gulp.dest(Dist.cssPath));
 });
 // 雪碧图
-gulp.task('sprites', ['clean'], function() {
-  //.pipe(changed(Src.icon))
-  return sprity.src({
-      src: './src/images/icon/**/*.{png,jpg}',
-      style: './_icon.scss',
-      margin: 2,
-      template: './src/template/template.hbs',
-      processor: 'css',
-      // orientation: 'left-right',
-      // 'dimension': [{
-      //     ratio: 1,
-      //     dpi: 72
-      // }, {
-      //     ratio: 2,
-      //     dpi: 192
-      // }],
-    })
-    .pipe(gulpif('*.png', gulp.dest('./src/images/'), gulp.dest('./src/sass/')))
-});
+
 //复制css
-gulp.task('csscopy', ['clean'], function() {
+gulp.task('csscopy', function() {
   gulp.src(Src.css)
     .pipe(changed(Src.css))
     .pipe(gulp.dest(Dist.cssPath))
 });
 //复制js
-gulp.task('jscopy', ['clean'], function() {
+gulp.task('jscopy', function() {
   gulp.src(Src.js)
     .pipe(changed(Src.js))
     .pipe(gulp.dest(Dist.jsPath))
 });
 
 //复制font
-gulp.task('fontcopy', ['clean'], function() {
+gulp.task('fontcopy', function() {
   gulp.src(Src.font)
     .pipe(changed(Src.font))
     .pipe(gulp.dest(Dist.fontPath))
 });
 //复制图片
-gulp.task('images', ['clean'], function() {
+gulp.task('images', function() {
   return gulp.src(Src.img)
     .pipe(changed(Src.img))
     .pipe(gulp.dest(Dist.imgPath))
@@ -140,10 +131,10 @@ gulp.task('browser-sync', function() {
 
 });
 // 默认任务
-gulp.task('default', ['clean', 'fontcopy', 'csscopy', 'jscopy', 'images', 'concat', 'sass', 'sprites', 'browser-sync']);
+gulp.task('default', [ 'fontcopy', 'csscopy', 'jscopy', 'sprite','images', 'concat', 'sass', 'browser-sync']);
 
 //concat拼接
-gulp.task('concat', ['clean'], function() {
+gulp.task('concat', function() {
   gulp.src(Src.html)
     .pipe(contentIncluder({
       includerReg: /<!\-\-include\s+"([^"]+)"\-\->/g
@@ -159,7 +150,7 @@ gulp.watch(Src.html, function() {
 });
 
 gulp.watch(Src.sass, function() {
-  gulp.run('sass', 'sprites');
+  gulp.run('sass');
 });
 gulp.watch(Src.css, function() {
   gulp.run('csscopy');

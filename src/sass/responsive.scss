@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import "responsive/mixin", 'responsive/xs', 'responsive/sm', 'responsive/md', 'responsive/lg'; // Extra small devices (portrait phones, less than 576px)
+@import "mixin", 'responsive/xs', 'responsive/sm', 'responsive/md', 'responsive/lg'; // Extra small devices (portrait phones, less than 576px)
 @media (max-width: 575px) {}
 // Small devices (landscape phones, less than 768px)
 @media (max-width: 767px) {}

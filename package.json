@@ -32,11 +32,9 @@
     "gulp-sass": "^2.1.0",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^1.5.1",
+    "gulp.spritesmith": "^6.9.0",
     "jshint": "^2.8.0",
-    "sprity": "^1.0.8",
     "vinyl-paths": "^2.1.0"
   },
-  "dependencies": {
-    "sprity-lwip": "^1.0.7"
-  }
+  "dependencies": {}
 }
