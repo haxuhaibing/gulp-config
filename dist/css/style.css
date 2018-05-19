@@ -7,26 +7,10 @@
 
 .icon-scope02 {
   background-image: url(../images/sprite.png);
-  background-position: 0px -43.5px;
-  background-size: 114.5px 82.5px;
+  background-position: 0px 0px;
+  background-size: 52px 39px;
   width: 52px;
   height: 39px;
-}
-
-.icon-scope03 {
-  background-image: url(../images/sprite.png);
-  background-position: -57px 0px;
-  background-size: 114.5px 82.5px;
-  width: 57.5px;
-  height: 42.5px;
-}
-
-.icon-scope05 {
-  background-image: url(../images/sprite.png);
-  background-position: 0px 0px;
-  background-size: 114.5px 82.5px;
-  width: 57px;
-  height: 43.5px;
 }
 
 /*sass变量*/

@@ -64,8 +64,6 @@ gulp.task('clean', function(cb) {
   ], cb);
 });
 
-var isfontCopy = true;
-
 //复制font
 function fontcopy() {
   gulp.task('fontcopy', function() {
@@ -74,13 +72,7 @@ function fontcopy() {
       .pipe(gulp.dest(Dist.fontPath))
   });
 }
-gulp.task('null', function() {});
-if (isfontCopy) {
-  fontcopy();
-  var fontCopy = 'fontcopy';
-} else {
-  var fontCopy = 'null';
-}
+
 //样式任务
 gulp.task('sass', function() {
   return gulp.src(Src.sass)
@@ -129,12 +121,12 @@ gulp.task('jscopy', function() {
 //图片
 gulp.task('images', function() {
   return gulp.src(Src.img)
-    .pipe(changed(Src.img))
-    .pipe(cache(imagemin({
-      optimizationLevel: 5,
-      progressive: true,
-      interlaced: true
-    })))
+    //  .pipe(changed(Src.img))
+    // .pipe(cache(imagemin({
+    //   optimizationLevel: 5,
+    //   progressive: true,
+    //   interlaced: true
+    // })))
     .pipe(gulp.dest(Dist.imgPath))
 });
 
@@ -155,7 +147,7 @@ gulp.task('concat', function() {
     .pipe(gulp.dest(Dist.path));
 });
 // 默认任务
-gulp.task('default', ['sass', 'csscopy', 'jscopy', 'sprites', 'images', 'concat', 'browser-sync', 'watch']);
+gulp.task('default', ['sass', 'csscopy', 'jscopy', 'sprites', 'images','fontcopy', 'concat', 'browser-sync', 'watch']);
 
 
 // 监听文件变化
@@ -165,5 +157,6 @@ gulp.task('watch', function() {
   gulp.watch(Src.css, ['csscopy']);
   gulp.watch(Src.js, ['jscopy']);
   gulp.watch(Src.img, ['images']);
+  gulp.watch(Src.icon, ['sprites', 'images','sass']);
   gulp.watch([Dist.js, Dist.html, Dist.css]).on('change', reload);
 });
