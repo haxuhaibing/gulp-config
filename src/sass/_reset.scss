@@ -20,6 +20,10 @@ body {
   a {
     outline: none;
     text-decoration: none!important;
+
+    &:hover {
+      color: $mainColor!important;
+    }
   }
 }
 
@@ -128,4 +132,9 @@ textarea {
 
 .fr {
   float: right;
+}
+
+.ac {
+  width: 1182px;
+  margin: 0 auto;
 }

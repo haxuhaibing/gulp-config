@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="renderer" content="webkit">
@@ -10,156 +9,21 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/common.css">
   <title>index</title>
-  <script src="js/plugs/jquery-1.7.min.js"></script>
-  <script src="js/plugs/jquery.SuperSlide.2.1.1.js"></script>
-  <script src="js/global.js"></script>
+
 </head>
 <body>
 
-<style>
-  .items {
-    display: none;
+<div class="demo">
+  <i class="icon icon-scope02"></i>
+  <p>我是图标</p>
+</div>
+<!-- 第三方库 -->
+<script src="js/plugs/jquery-1.12.4.min.js"></script>
+<!-- <link rel="stylesheet" href="css/plugs/swiper-4.1.6.min.css">
+<script src="js/plugs/swiper-4.1.6.min.js"></script> -->
+<!-- /第三方库 -->
 
-  }
-  .icon{
-    display: inline-block;
-  }
-</style>
-  <li class="icon icon-d">55</li>
-<!-- <div class="slide">
-  <ul id="hd">
-    <li>tab1</li>
-    <li>tab2</li>
-    <li>tab3</li>
-    <li class="icon icon-d">55</li>
-  </ul>
-
-  <div class="bd">
-    <div class="items">
-      1
-    </div>
-    <div class="items">
-      2
-    </div>
-    <div class="items">
-      3
-    </div>
-  </div>
-</div> -->
 <script>
-
-// var getHd=document.getElementById('hd');
-// var lis=getHd.childNodes;
-// console.log(lis.length);
-//
-// document.onclick=function(){
-//   for(i=0;i<lis.length;i++){
-//     if(lis[i].nodeType==1){
-//           lis[i].style.width='150px';
-//     }
-//
-//   }
-// }
-  // var hd = null;
-  // var ali = null;
-  // var oDiv = null;
-  // window.onload = function() {
-  //
-  //   hd=document.getElementById('hd');
-  //   ali=hd.getElementsByTagName('li');
-  //   oDiv=document.getElementsByClassName('items');
-  //   init();
-  //
-  //   function init() {
-  //     for (var i = 0; i < ali.length; i++) {
-  //       ali[i].index = i;
-  //       ali[i].onclick = change;
-  //
-  //     }
-  //   }
-  //
-  //   function change() {
-  //     for (var i = 0; i < ali.length; i++) {
-  //       ali[i].className = '';
-  //       oDiv[i].style.display = 'none';
-  //     }
-  //     this.className = "active";
-  //     oDiv[this.index].style.display = 'block';
-  //   }
-  // }
-
-
-  //改成面向对象
-  //改成面向对象
-  /*
-   *全局变量就是属性
-   *函数就是方法
-   *onload种创建对象
-   *this指向
-   */
-  // window.onload = function() {
-  //
-  //   var t1 = new Tab();
-  //   t1.init();
-  //
-  // }
-  //
-  // function Tab() {
-  //   this.hd = document.getElementById('hd');
-  //   this.ali = this.hd.getElementsByTagName('li');
-  //   this.oDiv = document.getElementsByClassName('items');
-  // }
-  // Tab.prototype.init = function() {
-  //   var This = this;
-  //   for (var i = 0; i < this.ali.length; i++) {
-  //     this.ali[i].index = i;
-  //     this.ali[i].onclick = function() {
-  //       This.change(this);
-  //     };
-  //   }
-  // };
-  //
-  // Tab.prototype.change = function(obj) {
-  //   for (var i = 0; i < this.ali.length; i++) {
-  //     this.ali[i].className = '';
-  //     this.oDiv[i].style.display = 'none';
-  //   }
-  //   obj.className = "active";
-  //   this.oDiv[obj.index].style.display = 'block';
-  // }
-  //
-  //
-  //
-
-  // window.onload = function() {
-  //   var t1 = new Tab();
-  //   t1.init();
-  // }
-  //
-  // function Tab() {
-  //   this.hd = document.getElementById('hd');
-  //   this.ali = this.hd.getElementsByTagName('li');
-  //   console.table(this.ali)
-  //   this.oDiv = document.getElementsByClassName('items');
-  // }
-  // Tab.prototype.init = function() {
-  //   var This = this;
-  //   for (var i = 0; i < this.ali.length; i++) {
-  //     this.ali[i].index = i;
-  //     this.ali[i].onclick = function() {
-  //       This.change(this);
-  //     };
-  //   }
-  // };
-  //
-  // Tab.prototype.change = function(obj) {
-  //   for (var i = 0; i < this.ali.length; i++) {
-  //     this.ali[i].className = '';
-  //     this.oDiv[i].style.display = 'none';
-  //   }
-  //   obj.className = "active";
-  //   this.oDiv[obj.index].style.display = 'block';
-  // }
 </script>
 </body>
 

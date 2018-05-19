@@ -1,41 +1,38 @@
 // 引入组件
-var gulp = require('gulp');
-var coffee = require('gulp-coffee');
-var changed = require('gulp-changed');
-var sass = require('gulp-sass');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var autoprefixer = require('gulp-autoprefixer');
-var postcss = require('gulp-postcss');
-var cssgrace = require('cssgrace');
-var cssnext = require("gulp-cssnext");
-var clean = require('gulp-clean');
-var contentIncluder = require('gulp-content-includer');
-var processors = [require('cssgrace')];
-var browserSync = require('browser-sync').create();
-var reload = browserSync.reload;
-var gulpif = require('gulp-if');
-var pixrem = require('gulp-pixrem');
-// var imagemin = require('gulp-imagemin');
-var del = require('del');
-var vinylPaths = require('vinyl-paths');
-var sourcemap = require('gulp-sourcemaps');
-var replace = require('gulp-replace');
-//错误处理
-var plumber = require('gulp-plumber');
-var notify = require("gulp-notify");
-//js相关
-var jshint = require('gulp-jshint');
-//服务器相关
-var proxy = 'localhost';
-var spritesmith = require('gulp.spritesmith');
-//通用自定义变量
-var timestamp = +new Date();
-var DEST = './';
-
-
-
+const gulp = require('gulp');
+const coffee = require('gulp-coffee');
+const changed = require('gulp-changed');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const autoprefixer = require('gulp-autoprefixer');
+const postcss = require('gulp-postcss');
+const cssgrace = require('cssgrace');
+const cssnext = require("gulp-cssnext");
+const clean = require('gulp-clean');
+const contentIncluder = require('gulp-content-includer');
+const processors = [require('cssgrace')];
+const browserSync = require('browser-sync').create();
+const reload = browserSync.reload;
+const gulpif = require('gulp-if');
+const pixrem = require('gulp-pixrem');
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
+const pump = require('pump');
+const runSequence = require('run-sequence');
+const del = require('del');
+const vinylPaths = require('vinyl-paths');
+const sourcemap = require('gulp-sourcemaps');
+const replace = require('gulp-replace');
+const plumber = require('gulp-plumber');
+const notify = require("gulp-notify");
+const jshint = require('gulp-jshint');
+const proxy = 'localhost';
+const spritesmith = require('gulp.spritesmith');
+const timestamp = +new Date();
+const DEST = './dist';
+const cache = require('gulp-cache');
 //源文件
 var Src = {
   js: 'src/js/**/*.js',
@@ -62,42 +59,28 @@ var Dist = {
 };
 // clean任务：
 gulp.task('clean', function(cb) {
-  return del(['./dist']);
-})
-
-
-gulp.task('sprite', function() {
-  var spriteData = gulp.src(Src.icon).pipe(spritesmith({
-    imgName: '/src/images/sprite.png',
-    cssName: '/src/sass/_icon.scss',
-    padding: 8,
-    cssTemplate: (data) => {
-      // data为对象，保存合成前小图和合成打大图的信息包括小图在大图之中的信息
-      let arr = [],
-        width = data.spritesheet.px.width,
-        height = data.spritesheet.px.height,
-        url = '../images/'+data.spritesheet.image
-      // console.log(data)
-      data.sprites.forEach(function(sprite) {
-        arr.push(
-          ".icon-" + sprite.name +
-          "{" +
-          "background: url('" + url + "') " +
-          "no-repeat " +
-          sprite.px.offset_x + " " + sprite.px.offset_y + ";" +
-          "background-size: " + width + " " + height + ";" +
-          "width: " + sprite.px.width + ";" +
-          "height: " + sprite.px.height + ";" +
-          "}\n"
-        )
-      })
-      // return "@fs:108rem;\n"+arr.join("")
-      return arr.join("")
-    }
-
-  }));
-  return spriteData.pipe(gulp.dest("dist/images"));
+  del([
+    './dist/**/*',
+  ], cb);
 });
+
+var isfontCopy = true;
+
+//复制font
+function fontcopy() {
+  gulp.task('fontcopy', function() {
+    gulp.src(Src.font)
+      .pipe(changed(Src.font))
+      .pipe(gulp.dest(Dist.fontPath))
+  });
+}
+gulp.task('null', function() {});
+if (isfontCopy) {
+  fontcopy();
+  var fontCopy = 'fontcopy';
+} else {
+  var fontCopy = 'null';
+}
 //样式任务
 gulp.task('sass', function() {
   return gulp.src(Src.sass)
@@ -108,7 +91,7 @@ gulp.task('sass', function() {
       errorHandler: notify.onError("Error: <%= error.message %>")
     }))
     .pipe(autoprefixer({
-      browsers: ['last 2 versions', 'Android >= 4.0']
+      browsers: ["last 5 version", "iOS >= 7", "Android >= 4"]
     }))
     .pipe(postcss(processors))
     //手机暂停使用
@@ -120,7 +103,16 @@ gulp.task('sass', function() {
     .pipe(gulp.dest(Dist.cssPath));
 });
 // 雪碧图
-
+gulp.task('sprites', function() {
+  var spriteData = gulp.src(Src.icon)
+    .pipe(spritesmith({
+      imgName: 'sprite.png',
+      cssName: '/src/sass/_icon.scss',
+      cssFormat: 'scss',
+      cssTemplate: 'src/template/scss.hbs'
+    }));
+  return spriteData.pipe(gulp.dest("src/images"));
+});
 //复制css
 gulp.task('csscopy', function() {
   gulp.src(Src.css)
@@ -134,31 +126,25 @@ gulp.task('jscopy', function() {
     .pipe(gulp.dest(Dist.jsPath))
 });
 
-//复制font
-gulp.task('fontcopy', function() {
-  gulp.src(Src.font)
-    .pipe(changed(Src.font))
-    .pipe(gulp.dest(Dist.fontPath))
-});
-//复制图片
+//图片
 gulp.task('images', function() {
   return gulp.src(Src.img)
     .pipe(changed(Src.img))
+    .pipe(cache(imagemin({
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
+    })))
     .pipe(gulp.dest(Dist.imgPath))
 });
 
 //静态服务器
 gulp.task('browser-sync', function() {
   browserSync.init({
-    server: Dist.path
+    server: DEST
   });
-
-
 });
-// 默认任务
-gulp.task('default', ['fontcopy', 'csscopy', 'jscopy', 'sprite', 'images', 'concat', 'sass', 'browser-sync']);
-
-//concat拼接
+//html拼接
 gulp.task('concat', function() {
   gulp.src(Src.html)
     .pipe(contentIncluder({
@@ -168,24 +154,16 @@ gulp.task('concat', function() {
     .pipe(replace(/url\(\.\.(.*?)\)/g, "url\($1\)"))
     .pipe(gulp.dest(Dist.path));
 });
+// 默认任务
+gulp.task('default', ['sass', 'csscopy', 'jscopy', 'sprites', 'images', 'concat', 'browser-sync', 'watch']);
+
 
 // 监听文件变化
-gulp.watch(Src.html, function() {
-  gulp.run('concat');
+gulp.task('watch', function() {
+  gulp.watch(Src.html, ['concat']);
+  gulp.watch(Src.sass, ['sass']);
+  gulp.watch(Src.css, ['csscopy']);
+  gulp.watch(Src.js, ['jscopy']);
+  gulp.watch(Src.img, ['images']);
+  gulp.watch([Dist.js, Dist.html, Dist.css]).on('change', reload);
 });
-
-gulp.watch(Src.sass, function() {
-  gulp.run('sass',);
-});
-gulp.watch(Src.css, function() {
-  gulp.run('csscopy');
-});
-
-gulp.watch(Src.js, function() {
-  gulp.run('jscopy');
-});
-
-gulp.watch(Src.img, function() {
-  gulp.run('images','sprite');
-});
-gulp.watch([Dist.js, Dist.html, Dist.css]).on('change', reload);
