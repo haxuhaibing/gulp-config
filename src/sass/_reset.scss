@@ -4,14 +4,14 @@ body,
 html {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-family: "PingFang SC","Helvetica Neue",Helvetica,"Microsoft YaHei","Lantinghei SC",arial,"\5b8b\4f53",sans-serif,tahoma;
   color: #333;
   background: #fff;
 }
 
 input,
 textarea {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-family: "PingFang SC","Helvetica Neue",Helvetica,"Microsoft YaHei","Lantinghei SC",arial,"\5b8b\4f53",sans-serif,tahoma;
 }
 
 body {
@@ -106,9 +106,6 @@ input {
   outline: none;
 }
 
-.icon {
-  display: inline-block;
-}
 
 * {
   box-sizing: border-box;
