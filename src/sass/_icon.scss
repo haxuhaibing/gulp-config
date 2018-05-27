@@ -1,10 +1,13 @@
 .icon {
   display: inline-block;
-}
-.icon-scope02 {
   background-image: url(../images/sprite.png);
-  background-position: 0px*0.5 0px*0.5;
-   background-size: 104*0.5px 78*0.5px;
-  width: 104px*0.5;
-  height: 78px*0.5;
 }
+
+
+.icon-scope02 {
+ background-position: (0px/2) (0px/2);
+  background-size: (104px/2) (78px/2);
+ width: (104px/2);
+ height: (78px/2);
+}
+

@@ -36,7 +36,7 @@ const cache = require('gulp-cache');
 //源文件
 var Src = {
   js: 'src/js/**/*.js',
-  sass: 'src/sass/*.scss',
+  sass: 'src/sass/**/*.scss',
   css: 'src/sass/**/*.css',
   html: 'src/html/*.html',
   img: 'src/images/**/*.*',
@@ -101,6 +101,7 @@ gulp.task('sprites', function() {
       imgName: 'sprite.png',
       cssName: '/src/sass/_icon.scss',
       cssFormat: 'scss',
+      padding: 10,
       cssTemplate: 'src/template/scss.hbs'
     }));
   return spriteData.pipe(gulp.dest("src/images"));
