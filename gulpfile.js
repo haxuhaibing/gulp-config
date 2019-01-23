@@ -31,8 +31,18 @@ const jshint = require('gulp-jshint');
 const proxy = 'localhost';
 const spritesmith = require('gulp.spritesmith');
 const timestamp = +new Date();
-const DEST = './dist';
+const px2rem = require('gulp-px2rem-plugin');
+const path = require('path');
+var str = path.join(__dirname, './'); //路径如：E:\wwwroot\bs-template
+// str = str.match(/^b*e$/g).toString();
+
+const DIST = 'dist';
+const DEST = './' + DIST + '';
 const cache = require('gulp-cache');
+
+const fs = require('fs');
+
+
 //源文件
 var Src = {
   js: 'src/js/**/*.js',
@@ -46,36 +56,55 @@ var Src = {
 
 //构建文件
 var Dist = {
-  js: 'dist/js/*.js',
-  css: 'dist/css/*.css',
-  html: 'dist/*.html',
-  img: 'dist/images/**/*.*',
-  path: 'dist',
-  jsPath: 'dist/js/',
-  cssPath: 'dist/css/',
-  htmlPath: 'dist/html/',
-  imgPath: 'dist/images/',
-  fontPath: 'dist/fonts/',
+  js: DIST + '/js/*.js',
+  css: DIST + '/css/*.css',
+  html: DIST + '/*.html',
+  img: DIST + '/images/**/*.*',
+  path: DIST,
+  jsPath: DIST + '/js/',
+  cssPath: DIST + '/css/',
+  htmlPath: DIST + '/html/',
+  imgPath: DIST + '/images/',
+  fontPath: DIST + '/fonts/',
 };
+
+
 // clean任务：
 gulp.task('clean', function(cb) {
   del([
     './dist/**/*',
   ], cb);
 });
-
-//复制font
-
-gulp.task('fontcopy', function() {
-  gulp.src(Src.font)
-    .pipe(changed(Src.font))
-    .pipe(gulp.dest(Dist.fontPath))
+//html拼接
+gulp.task('concat', function() {
+  gulp.src(Src.html)
+    .pipe(contentIncluder({
+      includerReg: /<!\-\-include\s+"([^"]+)"\-\->/g
+    }))
+    .pipe(replace(/<img(.*?)src=\"\.\.\/(.*?)>/g, "<img$1src=\"$2>"))
+    .pipe(replace(/url\(\.\.\/(.*?)\)/g, "url\($1\)"))
+    .pipe(gulp.dest(Dist.path));
 });
+//复制font
+if (fs.existsSync('src/fonts')) {
+  gulp.task('fontcopy', function() {
+    gulp.src(Src.font)
+      .pipe(changed(Src.font))
+      .pipe(gulp.dest(Dist.fontPath))
+  });
+} else {
+  gulp.task('fontcopy', function() {
+
+  });
+}
+
+
 
 
 //样式任务
 gulp.task('sass', function() {
   return gulp.src(Src.sass)
+
     .pipe(changed(Src.sass))
     .pipe(sourcemap.init())
     .pipe(sass().on('error', sass.logError))
@@ -86,10 +115,19 @@ gulp.task('sass', function() {
       browsers: ["last 5 version", "iOS >= 7", "Android >= 4"]
     }))
     .pipe(postcss(processors))
+
     //手机暂停使用
-    // .pipe(pixrem({ rootValue: '100px' }))
+    // .pipe(pix
+    // rem({ rootValue: '100px' }))
     .pipe(sass({
       outputStyle: 'expanded'
+    }))
+    .pipe(px2rem({
+      'width_design': 375,
+      'valid_num': 6,
+      'pieces': 3.75,
+      'ignore_px': [1, 2],
+      'ignore_selector': ['.class1']
     }))
     .pipe(sourcemap.write('./maps'))
     .pipe(gulp.dest(Dist.cssPath));
@@ -137,18 +175,9 @@ gulp.task('browser-sync', function() {
     server: DEST
   });
 });
-//html拼接
-gulp.task('concat', function() {
-  gulp.src(Src.html)
-    .pipe(contentIncluder({
-      includerReg: /<!\-\-include\s+"([^"]+)"\-\->/g
-    }))
-    .pipe(replace(/<img(.*?)src=\"\.\.\/(.*?)>/g, "<img$1src=\"$2>"))
-    .pipe(replace(/url\(\.\.(.*?)\)/g, "url\($1\)"))
-    .pipe(gulp.dest(Dist.path));
-});
+
 // 默认任务
-gulp.task('default', ['sass', 'csscopy', 'jscopy', 'sprites', 'images', 'fontcopy', 'concat', 'browser-sync', 'watch']);
+gulp.task('default', ['concat', 'sass', 'csscopy', 'jscopy', 'sprites', 'images', 'fontcopy', 'browser-sync', 'watch']);
 
 
 // 监听文件变化
