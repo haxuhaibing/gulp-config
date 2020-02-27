@@ -1,0 +1,3 @@
+//全局js
+console.log('456789')
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiIiwic291cmNlcyI6WyJnbG9iYWwuanMiXSwic291cmNlc0NvbnRlbnQiOlsiLy/lhajlsYBqc1xyXG5jb25zb2xlLmxvZygnNDU2Nzg5JylcclxuIl0sImZpbGUiOiJnbG9iYWwuanMifQ==

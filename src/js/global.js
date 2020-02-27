@@ -1,4 +1,2 @@
 //全局js
-$(document).ready(function() {
-
-});
+console.log('45678900000')

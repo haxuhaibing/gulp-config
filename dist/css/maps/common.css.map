@@ -1,1 +1,0 @@
-{"version":3,"sources":["_mixin.scss"],"names":[],"mappings":";AACA,YAAA","file":"../common.css","sourcesContent":["@charset \"UTF-8\";\r\n/*sass变量*/\r\n$mainColor: #5490fe;\r\n"]}

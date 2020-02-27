@@ -1,1 +1,11 @@
-@import "mixin", "reset", "public";
+// @import "mixin", "reset", "public";
+
+
+#app{
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  align-items: baseline;
+ font-size: 50px;
+ display: inline-block;
+}

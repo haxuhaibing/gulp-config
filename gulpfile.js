@@ -1,192 +1,94 @@
-// 引入组件
+const {
+  src,
+  dest,
+  series,
+  task,
+  watch,
+  parallel
+} = require('gulp');
 const gulp = require('gulp');
-const coffee = require('gulp-coffee');
-const changed = require('gulp-changed');
 const sass = require('gulp-sass');
+const minifyCSS = require('gulp-csso');
 const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
-const rename = require('gulp-rename');
-const autoprefixer = require('gulp-autoprefixer');
-const postcss = require('gulp-postcss');
-const cssgrace = require('cssgrace');
-const cssnext = require("gulp-cssnext");
+const browserSync = require('browser-sync'), // 自动刷新
+  reload = browserSync.reload;
+const changed = require('gulp-changed')
 const clean = require('gulp-clean');
-const contentIncluder = require('gulp-content-includer');
-const processors = [require('cssgrace')];
-const browserSync = require('browser-sync').create();
-const reload = browserSync.reload;
-const gulpif = require('gulp-if');
-const pixrem = require('gulp-pixrem');
-const imagemin = require('gulp-imagemin');
-const pngquant = require('imagemin-pngquant');
-const pump = require('pump');
-const runSequence = require('run-sequence');
-const del = require('del');
-const vinylPaths = require('vinyl-paths');
-const sourcemap = require('gulp-sourcemaps');
-const replace = require('gulp-replace');
-const plumber = require('gulp-plumber');
-const notify = require("gulp-notify");
-const jshint = require('gulp-jshint');
-const proxy = 'localhost';
-const spritesmith = require('gulp.spritesmith');
-const timestamp = +new Date();
-const px2rem = require('gulp-px2rem-plugin');
-const path = require('path');
-var str = path.join(__dirname, './'); //路径如：E:\wwwroot\bs-template
-// str = str.match(/^b*e$/g).toString();
+const sourcemaps = require('gulp-sourcemaps');
+const autoprefixer = require('gulp-autoprefixer');
 
-const DIST = 'dist';
-const DEST = './' + DIST + '';
-const cache = require('gulp-cache');
+function cleanBuild() {
+  return gulp.src('build/**', {
+      read: false
+    })
+    .pipe(clean());
+}
+// server
+function server() {
+  browserSync.init({
+    port: 9000,
+    server: {
+      baseDir: 'build/',
+      index: 'index.html'
+    }
+  })
+  gulp.watch('build/**/*').on('change', reload)
+}
 
-const fs = require('fs');
+function html() {
+  return src('./src/html/*.html')
+    .pipe(dest('build'))
+}
 
+function images() {
+  return src('./src/images/**/*.*')
+    .pipe(dest('build/images'))
+}
 
-//源文件
-var Src = {
-  js: 'src/js/**/*.js',
-  sass: 'src/sass/**/*.scss',
-  css: 'src/sass/**/*.css',
-  html: 'src/html/*.html',
-  img: 'src/images/**/*.*',
-  font: 'src/fonts/**/*.*',
-  icon: 'src/images/icon/*.*',
-};
+function css() {
+  return src('./src/sass/*.scss', {
+      sourcemaps: true
+    })
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      outputStyle: 'expanded'
+    }).on('error', sass.logError))
 
-//构建文件
-var Dist = {
-  js: DIST + '/js/*.js',
-  css: DIST + '/css/*.css',
-  html: DIST + '/*.html',
-  img: DIST + '/images/**/*.*',
-  path: DIST,
-  jsPath: DIST + '/js/',
-  cssPath: DIST + '/css/',
-  htmlPath: DIST + '/html/',
-  imgPath: DIST + '/images/',
-  fontPath: DIST + '/fonts/',
-};
-
-
-// clean任务：
-gulp.task('clean', function(cb) {
-  del([
-    './dist/**/*',
-  ], cb);
-});
-//html拼接
-gulp.task('concat', function() {
-  gulp.src(Src.html)
-    .pipe(contentIncluder({
-      includerReg: /<!\-\-include\s+"([^"]+)"\-\->/g
+    .pipe(autoprefixer({
+      cascade: false
     }))
-    .pipe(replace(/<img(.*?)src=\"\.\.\/(.*?)>/g, "<img$1src=\"$2>"))
-    .pipe(replace(/url\(\.\.\/(.*?)\)/g, "url\($1\)"))
-    .pipe(gulp.dest(Dist.path));
-});
-//复制font
-if (fs.existsSync('src/fonts')) {
-  gulp.task('fontcopy', function() {
-    gulp.src(Src.font)
-      .pipe(changed(Src.font))
-      .pipe(gulp.dest(Dist.fontPath))
-  });
-} else {
-  gulp.task('fontcopy', function() {
-
-  });
+    .pipe(sourcemaps.write('.'))
+    .pipe(dest('build/css', {
+      sourcemaps: true
+    }))
 }
 
 
-
-
-//样式任务
-gulp.task('sass', function() {
-  return gulp.src(Src.sass)
-
-    .pipe(changed(Src.sass))
-    .pipe(sourcemap.init())
-    .pipe(sass().on('error', sass.logError))
-    .pipe(plumber({
-      errorHandler: notify.onError("Error: <%= error.message %>")
+function js() {
+  return src('./src/js/*.js', {
+      sourcemaps: true
+    })
+    .pipe(dest('build/js', {
+      sourcemaps: true
     }))
-    .pipe(autoprefixer({
-      browsers: ["last 5 version", "iOS >= 7", "Android >= 4"]
-    }))
-    .pipe(postcss(processors))
-
-    //手机暂停使用
-    // .pipe(pix
-    // rem({ rootValue: '100px' }))
-    .pipe(sass({
-      outputStyle: 'expanded'
-    }))
-    .pipe(px2rem({
-      'width_design': 375,
-      'valid_num': 6,
-      'pieces': 3.75,
-      'ignore_px': [1, 2],
-      'ignore_selector': ['.class1']
-    }))
-    .pipe(sourcemap.write('./maps'))
-    .pipe(gulp.dest(Dist.cssPath));
-});
-// 雪碧图
-gulp.task('sprites', function() {
-  var spriteData = gulp.src(Src.icon)
-    .pipe(spritesmith({
-      imgName: 'sprite.png',
-      cssName: '/src/sass/_icon.scss',
-      cssFormat: 'scss',
-      padding: 10,
-      cssTemplate: 'src/template/scss.hbs'
-    }));
-  return spriteData.pipe(gulp.dest("src/images"));
-});
-//复制css
-gulp.task('csscopy', function() {
-  gulp.src(Src.css)
-    .pipe(changed(Src.css))
-    .pipe(gulp.dest(Dist.cssPath))
-});
-//复制js
-gulp.task('jscopy', function() {
-  gulp.src(Src.js)
-    .pipe(changed(Src.js))
-    .pipe(gulp.dest(Dist.jsPath))
-});
-
-//图片
-gulp.task('images', function() {
-  return gulp.src(Src.img)
-    //  .pipe(changed(Src.img))
-    // .pipe(cache(imagemin({
-    //   optimizationLevel: 5,
-    //   progressive: true,
-    //   interlaced: true
-    // })))
-    .pipe(gulp.dest(Dist.imgPath))
-});
-
-//静态服务器
-gulp.task('browser-sync', function() {
-  browserSync.init({
-    server: DEST
-  });
-});
-
-// 默认任务
-gulp.task('default', ['concat', 'sass', 'csscopy', 'jscopy', 'sprites', 'images', 'fontcopy', 'browser-sync', 'watch']);
+}
 
 
-// 监听文件变化
-gulp.task('watch', function() {
-  gulp.watch(Src.html, ['concat']);
-  gulp.watch(Src.sass, ['sass']);
-  gulp.watch(Src.css, ['csscopy']);
-  gulp.watch(Src.js, ['jscopy']);
-  gulp.watch(Src.img, ['images']);
-  gulp.watch(Src.icon, ['sprites', 'images', 'sass']);
-  gulp.watch([Dist.js, Dist.html, Dist.css]).on('change', reload);
-});
+function jsWatch() {
+  watch('./src/js/*.js', gulp.series('js'));
+}
+
+function cssWatch() {
+  watch('./src/sass/*.scss', gulp.series('css'));
+}
+
+function htmlWatch() {
+  watch('./src/html/*.html', gulp.series('html'));
+}
+exports.cleanBuild = cleanBuild;
+exports.server = server;
+exports.images = images;
+exports.js = js;
+exports.css = css;
+exports.html = html;
+exports.default = parallel(html, js, css, images, jsWatch, cssWatch, htmlWatch, server);
