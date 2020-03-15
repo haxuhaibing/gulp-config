@@ -21,9 +21,7 @@ body {
     outline: none;
     text-decoration: none!important;
 
-    &:hover {
-  
-    }
+    &:hover {}
   }
 }
 
@@ -106,9 +104,8 @@ input {
   outline: none;
 }
 
-
 * {
-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 input[type="button"],
@@ -131,7 +128,60 @@ textarea {
   float: right;
 }
 
-.ac {
-  width: 1182px;
-  margin: 0 auto;
+a {
+  &:hover {
+    color: #3686F1!important;
+  }
+}
+
+.layui-laydate .layui-laydate-main .layui-this {
+  background-color: #3686f1!important;
+}
+
+.zl-scrollBarBox {
+  height: 100%;
+  position: absolute;
+  width: 10px!important;
+}
+
+.zl-scrollBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #848484;
+  transition: background 0.3s;
+}
+
+.zl-scrollBar.zl-verticalBar {
+  min-height: 10px;
+  width: 10px!important;
+  background: rgba(247,247,247,1);
+  border-radius: 5px!important;
+}
+
+.zl-scrollBar.zl-horizontalBar {
+  min-width: 10px;
+}
+
+.zl-scrollBar:hover {
+  background: #999;
+}
+
+.zl-scrollContentDiv {
+  position: relative!important;
+  width: 100%!important;
+  height: 100%!important;
+  padding: 0!important !important;
+  margin: 0!important !important;
+  top: 0;
+  left: 0;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
