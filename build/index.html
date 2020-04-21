@@ -7,19 +7,89 @@
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="js/vendors/jquery-1.12.4.min.js"></script>
-    <script src="js/vendors/scrollBar.js"></script>
-    <script src="js/laydate.js"></script>
-    <script src="js/jquery.validate.min.js"></script>
-    <script src="js/global.js"></script>
+    <script src="js/vendors/jquery.min.js"></script>
     <title>index</title>
   </head>
 
   <body>
 
- 123
+<div class="record-order-list">
+  <div class="record-order-item">
+    <div class="hd ">
+      <div class="time">2020/07/04 13:59:42</div>
+      <div class="type">皮具护理系列</div>
+      <div class="price"><span>￥99</span> <i></i></div>
+    </div>
+    <div class="bd">
+      <ul>
+        <li>
+          <div class="name">姓名：陈长林</div>
+          <div class="number">订单号：265411634545611</div>
+        </li>
+        <li>
+          <div class="name">电话：18201585477</div>
+          <div class="status"> <a href="#" class="status-refund">退款</a> <span>未使用</span></div>
+        </li>
+        <li>
+          <div class="name">有效期至：2020-05-23</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="record-order-item record-order-item-used">
+    <div class="hd">
+      <div class="time">2020/07/04 13:59:42</div>
+      <div class="type">皮具护理系列</div>
+      <div class="price"><span>￥99</span> <i></i></div>
+    </div>
+    <div class="bd">
+      <ul>
+        <li>
+          <div class="name">姓名：陈长林</div>
+          <div class="number">订单号：265411634545611</div>
+        </li>
+        <li>
+          <div class="name">电话：18201585477</div>
+          <div class="status"><span class="status-used">已使用</span></div>
+        </li>
+        <li>
+          <div class="name">A店：NO124522</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="record-order-item record-order-item-used">
+    <div class="hd">
+      <div class="time">2020/07/04 13:59:42</div>
+      <div class="type">皮具护理系列</div>
+      <div class="price"><span>￥99</span> <i></i></div>
+    </div>
+    <div class="bd">
+      <ul>
+        <li>
+          <div class="name">姓名：陈长林</div>
+          <div class="number">订单号：265411634545611</div>
+        </li>
+        <li>
+          <div class="name">电话：18201585477</div>
+          <div class="status"><span>已使用</span></div>
+        </li>
+        <li>
+          <div class="name">有效期至：2020-05-23</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $('.record-order-item .hd').on('click', function() {
+    $(this).next().stop().slideToggle();
+    $(this).find('.price i').stop().toggleClass('on');
+  })
+</script>
+
 </body>
 
 </html>

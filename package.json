@@ -24,11 +24,13 @@
     "gulp-changed": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.7.0",
     "gulp-content-includer": "^0.0.7",
     "gulp-csso": "^4.0.1",
     "gulp-file-include": "^2.1.1",
     "gulp-replace": "^1.0.0",
     "gulp-sass": "^4.0.2",
-    "gulp-watch": "^5.0.1"
+    "gulp-watch": "^5.0.1",
+    "jquery": "^3.5.0"
   }
 }
