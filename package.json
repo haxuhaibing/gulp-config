@@ -19,6 +19,7 @@
     "gulp-sourcemaps": "^2.6.5"
   },
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
     "gulp-changed": "^4.0.2",
