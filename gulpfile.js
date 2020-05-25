@@ -16,6 +16,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const replace = require('gulp-replace');
 const fileinclude = require('gulp-file-include');
+const contentIncluder = require('gulp-content-includer');
 const connect = require('gulp-connect');
 
 function cleanDir() {
@@ -48,9 +49,8 @@ function serverReload() {
 //html拼接
 function compileHtml() {
   return src('./src/html/**/*.html')
-    .pipe(fileinclude({
-      prefix: '@@',
-      basepath: '@file'
+    .pipe(contentIncluder({
+      includerReg: /<!\-\-include\s+"([^"]+)"\-\->/g
     }))
     .pipe(replace(/<img(.*?)src=\"\.\.\/(.*?)>/g, "<img$1src=\"$2>"))
     .pipe(dest('build'))
@@ -75,9 +75,9 @@ function compileScss() {
 function compileJs() {
   return src('./src/js/*.js')
     .pipe(changed('./build/js'))
-    // .pipe(babel({
-    //   presets: ['es2015']
-    // }))
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(dest('build/js'))
 }
 //image
