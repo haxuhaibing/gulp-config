@@ -18,6 +18,7 @@ const replace = require('gulp-replace');
 const fileinclude = require('gulp-file-include');
 const contentIncluder = require('gulp-content-includer');
 const connect = require('gulp-connect');
+const ts = require('gulp-typescript');
 
 function cleanDir() {
   return gulp.src('build/**/*.*', {
@@ -40,6 +41,7 @@ function serverReload() {
       './src/sass/**/*.scss',
       './src/html/*.html',
       '../src/js/*.js',
+      '../src/js/*.ts',
       './src/public/**/*.*'
     ])
     .pipe(connect.reload());
@@ -73,8 +75,11 @@ function compileScss() {
 
 //es6转js
 function compileJs() {
-  return src('./src/js/*.js')
-    .pipe(changed('./build/js'))
+  return src(['./src/js/*.js', './src/js/*.ts'])
+    .pipe(ts({
+      noImplicitAny: true
+    }))
+    // .pipe(changed('./build/js'))
     .pipe(babel({
       presets: ['es2015']
     }))
@@ -99,7 +104,7 @@ function watchFn() {
   watch('./src/images/**/*.*', series(compileImage, serverReload))
   watch('./src/scss/*.scss', series(compileScss, serverReload))
   watch('./src/html/*.html', series(compileHtml, serverReload))
-  watch('./src/js/*.js', series(compileJs, serverReload))
+  watch(['./src/js/*.js', './src/js/*.ts'], series(compileJs, serverReload))
 }
 
 // 开发环境
