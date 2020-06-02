@@ -129,27 +129,16 @@ textarea {
   float: right;
 }
 
-.app {
+ul {
   display: -ms-flex;
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.app li {
-  border: 1px solid #000;
+ul li {
+  width: 24%;
+  background: pink;
+  height: 30px;
   margin: 1px;
-}
-
-.app li:nth-child(1) {
-  align-self: flex-end;
-  order: 1;
-}
-
-.app li:nth-child(2) {
-  order: 2;
-}
-
-.app li:nth-child(3) {
-  align-self: flex-start;
-  order: 0;
-  background: red;
 }

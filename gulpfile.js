@@ -76,9 +76,9 @@ function compileScss() {
 //es6转js
 function compileJs() {
   return src(['./src/js/*.js', './src/js/*.ts'])
-    .pipe(ts({
-      noImplicitAny: true
-    }))
+    // .pipe(ts({
+    //   noImplicitAny: true
+    // }))
     // .pipe(changed('./build/js'))
     .pipe(babel({
       presets: ['es2015']
