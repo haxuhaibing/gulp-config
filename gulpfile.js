@@ -75,13 +75,13 @@ function compileScss() {
 
 //es6转js
 function compileJs() {
-  return src(['./src/js/*.js', './src/js/*.ts'])
+  return src('./src/js/*.js')
     // .pipe(ts({
     //   noImplicitAny: true
     // }))
-    // .pipe(changed('./build/js'))
+    .pipe(changed('./build/js'))
     .pipe(babel({
-      presets: ['es2015']
+      presets: ['@babel/preset-env']
     }))
     .pipe(dest('build/js'))
 }
